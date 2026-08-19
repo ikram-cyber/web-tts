@@ -35,16 +35,14 @@
             </div>
 
             <button id="btn-generate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
-                Generate Suara 🚀
+                Generate Link Download 🚀
             </button>
         </div>
 
         <div id="result-area" class="mt-6 hidden space-y-4 pt-6 border-t border-gray-700">
-            <p id="status-text" class="text-sm text-yellow-400 text-center font-bold">Memutar Part 1...</p>
-            <audio id="audio-player" controls class="w-full rounded-lg"></audio>
+            <p id="status-text" class="text-sm text-green-400 text-center font-bold">✅ Sukses! Silakan download part di bawah:</p>
             
-            <p class="text-xs text-gray-400 text-center mt-2">Daftar Link Download:</p>
-            <div id="download-list" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2"></div>
+            <div id="download-list" class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-2 mt-4"></div>
         </div>
     </div>
 
@@ -72,7 +70,6 @@
 
         const btnGenerate = document.getElementById('btn-generate');
         const resultArea = document.getElementById('result-area');
-        const audioPlayer = document.getElementById('audio-player');
         const downloadList = document.getElementById('download-list');
         const statusText = document.getElementById('status-text');
 
@@ -82,37 +79,23 @@
 
             if (!text) return alert("Isi teksnya dulu bos!");
 
-            const chunks = chunkText(text, 150); 
+            // Tampilkan area hasil
+            resultArea.classList.remove('hidden');
             
+            // Potong teks
+            const chunks = chunkText(text, 150); 
             const urls = chunks.map(chunk => `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${voice}&q=${encodeURIComponent(chunk)}`);
 
-            let currentIndex = 0;
-            audioPlayer.src = urls[currentIndex];
-            statusText.innerText = `Memutar Part 1 dari ${urls.length}`;
-            
-            resultArea.classList.remove('hidden');
-            audioPlayer.play();
-
-            audioPlayer.onended = () => {
-                currentIndex++;
-                if (currentIndex < urls.length) {
-                    audioPlayer.src = urls[currentIndex];
-                    statusText.innerText = `Memutar Part ${currentIndex + 1} dari ${urls.length}`;
-                    audioPlayer.play();
-                } else {
-                    statusText.innerText = "✅ Selesai memutar semua suara!";
-                    statusText.classList.replace('text-yellow-400', 'text-green-400');
-                }
-            };
-
+            // Bersihkan list download sebelumnya
             downloadList.innerHTML = ''; 
+            
+            // Buat tombol download untuk setiap potongan
             urls.forEach((url, index) => {
                 const btn = document.createElement('a');
                 btn.href = url;
-                btn.download = `suara-part${index + 1}.mp3`; 
                 btn.target = "_blank";
                 btn.rel = "noopener noreferrer";
-                btn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 text-sm";
+                btn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 text-sm";
                 btn.innerHTML = `⬇️ Download Part ${index + 1}`;
                 downloadList.appendChild(btn);
             });
