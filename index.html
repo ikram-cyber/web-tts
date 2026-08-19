@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web TTS Pro (Anti-404)</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Web TTS Pro v3</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
     <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
-        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (Anti-404)</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (v3 Anti-404)</h2>
         
         <div class="space-y-4">
             <div>
@@ -25,7 +26,7 @@
 
             <div>
                 <label class="block text-sm font-medium mb-1">Teks Naskah</label>
-                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Masukkan naskah di sini..."></textarea>
+                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Masukkan naskah video di sini..."></textarea>
             </div>
 
             <button id="btn-generate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
@@ -73,7 +74,7 @@
 
             const chunks = chunkText(text, 150); 
             
-            // PERUBAHAN DISINI: Menggunakan googleapis dengan client=gtx
+            // JALUR BELAKANG GOOGLE API ANTI 404
             const urls = chunks.map(chunk => `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${voice}&q=${encodeURIComponent(chunk)}`);
 
             let currentIndex = 0;
@@ -99,7 +100,10 @@
             urls.forEach((url, index) => {
                 const btn = document.createElement('a');
                 btn.href = url;
+                // Atribut ini untuk memaksa download jika browser mendukung
+                btn.download = `suara-part${index + 1}.mp3`; 
                 btn.target = "_blank";
+                btn.rel = "noopener noreferrer";
                 btn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 text-sm";
                 btn.innerHTML = `⬇️ Download Part ${index + 1}`;
                 downloadList.appendChild(btn);
