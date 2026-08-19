@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penyambung Suara AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-blue-400">Audio Joiner</h2>
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white underline">Kembali ke TTS</a>
+        </div>
+        
+        <p class="text-sm text-gray-400 mb-6">Pilih beberapa file MP3 pendek yang sudah kamu download, lalu gabungkan jadi 1 file panjang untuk CapCut.</p>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Pilih File MP3 (Bisa pilih banyak sekaligus)</label>
+                <input type="file" id="file-input" multiple accept="audio/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 bg-gray-700 rounded-lg p-2 cursor-pointer">
+            </div>
+
+            <button id="btn-gabung" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                Gabung Jadi Satu 🚀
+            </button>
+        </div>
+
+        <div id="result-area" class="mt-6 hidden space-y-4 pt-6 border-t border-gray-700">
+            <p class="text-sm text-green-400 text-center font-bold">Sukses digabung! Silakan putar atau download:</p>
+            <audio id="audio-player" controls class="w-full rounded-lg"></audio>
+            <a id="download-link" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                Download Audio Panjang
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('btn-gabung').onclick = async () => {
+            const files = document.getElementById('file-input').files;
+            
+            if (files.length === 0) {
+                return alert("Pilih file suaranya dulu bos!");
+            }
+            if (files.length === 1) {
+                return alert("Minimal pilih 2 file biar bisa digabung!");
+            }
+
+            // Memasukkan file ke dalam array blob
+            let blobs = [];
+            for (let i = 0; i < files.length; i++) {
+                blobs.push(files[i]);
+            }
+
+            // Menggabungkan file secara instan (binary merge)
+            const finalBlob = new Blob(blobs, { type: 'audio/mp3' });
+            const url = URL.createObjectURL(finalBlob);
+
+            const audioPlayer = document.getElementById('audio-player');
+            const downloadLink = document.getElementById('download-link');
+            const resultArea = document.getElementById('result-area');
+
+            audioPlayer.src = url;
+            downloadLink.href = url;
+            // Memberikan nama file unik berdasarkan jam
+            downloadLink.download = `SimCity-Voice-Full-${Date.now()}.mp3`; 
+            
+            resultArea.classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
