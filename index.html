@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTS Generator Online</title>
+    <title>Web TTS Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
     <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
-        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (Tanpa Server)</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (Final Version)</h2>
         
         <div class="space-y-4">
+            <!-- Pilihan Pengisi Suara -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Pilih Pengisi Suara</label>
+                <select id="voice-select" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none text-white">
+                    <option value="id">🇮🇩 Suara Indonesia (Normal)</option>
+                    <option value="ms">🇲🇾 Suara Melayu (Logat Upin Ipin)</option>
+                    <option value="jv">🇮🇩 Suara Jawa (Medok)</option>
+                    <option value="su">🇮🇩 Suara Sunda (Lembut)</option>
+                    <option value="en">🇺🇸 Suara Bule (Aksen Inggris)</option>
+                    <option value="ja">🇯🇵 Suara Anime (Aksen Jepang)</option>
+                </select>
+            </div>
+
             <div>
                 <label class="block text-sm font-medium mb-1">Teks (Maks ~200 karakter per proses)</label>
-                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Masukkan teks di sini..."></textarea>
+                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Ketik script video kamu di sini..."></textarea>
             </div>
 
             <button id="btn-generate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
@@ -21,6 +34,7 @@
             </button>
         </div>
 
+        <!-- Area Hasil Audio (Awalnya disembunyikan) -->
         <div id="result-area" class="mt-6 hidden space-y-4 pt-6 border-t border-gray-700">
             <audio id="audio-player" controls class="w-full rounded-lg"></audio>
             <a id="download-link" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
@@ -37,15 +51,19 @@
 
         btnGenerate.addEventListener('click', () => {
             const text = document.getElementById('text').value.trim();
+            const voice = document.getElementById('voice-select').value;
+
             if (!text) return alert("Isi teksnya dulu bos!");
 
-            // Menggunakan API gratis untuk bypass kebutuhan Python/Server
-            const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q=${encodeURIComponent(text)}`;
+            // Trik menggunakan API Google TTS dengan kode bahasa untuk manipulasi suara
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${voice}&client=tw-ob&q=${encodeURIComponent(text)}`;
 
+            // Set file ke audio player dan tombol download
             audioPlayer.src = url;
             downloadLink.href = url;
-            downloadLink.download = `suara-${Date.now()}.mp3`;
+            downloadLink.download = `suara-${voice}-${Date.now()}.mp3`;
             
+            // Tampilkan player dan putar otomatis
             resultArea.classList.remove('hidden');
             audioPlayer.play();
         });
