@@ -37,6 +37,11 @@
         </div>
     </div>
 
+    <!-- Copyright Footer -->
+    <footer class="mt-8 text-center text-xs text-gray-500">
+        &copy; 2026 ikram-cyber. All rights reserved.
+    </footer>
+
     <script>
         document.getElementById('btn-gabung').onclick = async () => {
             const files = document.getElementById('file-input').files;
@@ -63,7 +68,6 @@
             audioPlayer.src = url;
             downloadLink.href = url;
             
-            // Format Tanggal & Waktu (Contoh: 19-8-2026_20-58-37)
             const d = new Date();
             const waktu = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}_${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`;
             
