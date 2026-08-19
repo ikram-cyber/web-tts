@@ -7,17 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-blue-400">Audio Joiner</h2>
-            <a href="index.html" class="text-sm text-gray-400 hover:text-white underline">Kembali ke TTS</a>
-        </div>
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700 relative">
         
-        <p class="text-sm text-gray-400 mb-6">Pilih beberapa file MP3 pendek yang sudah kamu download, lalu gabungkan jadi 1 file panjang untuk CapCut.</p>
+        <a href="index.html" class="absolute top-4 right-4 text-xs bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-bold transition duration-200 shadow-lg">
+            🔙 Kembali ke TTS
+        </a>
+
+        <h2 class="text-2xl font-bold text-blue-400 mt-4 mb-2 text-center">Audio Joiner</h2>
+        
+        <p class="text-sm text-gray-400 mb-6 text-center">Pilih beberapa file MP3 pendek, lalu gabungkan jadi 1 file panjang.</p>
 
         <div class="space-y-4">
             <div>
-                <label class="block text-sm font-medium mb-2">Pilih File MP3 (Bisa pilih banyak sekaligus)</label>
+                <label class="block text-sm font-medium mb-2">Pilih File MP3 (Sesuai Urutan)</label>
                 <input type="file" id="file-input" multiple accept="audio/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 bg-gray-700 rounded-lg p-2 cursor-pointer">
             </div>
 
@@ -30,7 +32,7 @@
             <p class="text-sm text-green-400 text-center font-bold">Sukses digabung! Silakan putar atau download:</p>
             <audio id="audio-player" controls class="w-full rounded-lg"></audio>
             <a id="download-link" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
-                Download Audio Panjang
+                ⬇️ Download Audio Panjang
             </a>
         </div>
     </div>
@@ -46,13 +48,11 @@
                 return alert("Minimal pilih 2 file biar bisa digabung!");
             }
 
-            // Memasukkan file ke dalam array blob
             let blobs = [];
             for (let i = 0; i < files.length; i++) {
                 blobs.push(files[i]);
             }
 
-            // Menggabungkan file secara instan (binary merge)
             const finalBlob = new Blob(blobs, { type: 'audio/mp3' });
             const url = URL.createObjectURL(finalBlob);
 
@@ -62,8 +62,12 @@
 
             audioPlayer.src = url;
             downloadLink.href = url;
-            // Memberikan nama file unik berdasarkan jam
-            downloadLink.download = `SimCity-Voice-Full-${Date.now()}.mp3`; 
+            
+            // Format Tanggal & Waktu (Contoh: 19-8-2026_20-58-37)
+            const d = new Date();
+            const waktu = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}_${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`;
+            
+            downloadLink.download = `Audio-Gabungan_${waktu}.mp3`; 
             
             resultArea.classList.remove('hidden');
         };
