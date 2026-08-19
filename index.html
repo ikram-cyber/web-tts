@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web TTS Pro (Auto-Split)</title>
+    <title>Web TTS Pro (Anti-404)</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
     <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
-        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (Unlimited Text)</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (Anti-404)</h2>
         
         <div class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-1">Pilih Pengisi Suara</label>
                 <select id="voice-select" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none text-white">
-                    <option value="id">🇮🇩 Suara Indonesia (Normal)</option>
+                    <option value="id">🇮🇩 Suara Indonesia</option>
                     <option value="ms">🇲🇾 Suara Melayu (Upin Ipin)</option>
-                    <option value="jv">🇮🇩 Suara Jawa (Medok)</option>
+                    <option value="jv">🇮🇩 Suara Jawa</option>
                     <option value="su">🇮🇩 Suara Sunda</option>
                     <option value="en">🇺🇸 Suara Bule (English)</option>
                     <option value="ja">🇯🇵 Suara Anime (Jepang)</option>
@@ -24,28 +24,25 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium mb-1">Teks (Bebas Sepanjang Apapun!)</label>
-                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Masukkan naskah SimCity atau apapun yang panjang banget di sini..."></textarea>
+                <label class="block text-sm font-medium mb-1">Teks Naskah</label>
+                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Masukkan naskah di sini..."></textarea>
             </div>
 
             <button id="btn-generate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
-                Generate Suara (Auto-Split) 🚀
+                Generate Suara 🚀
             </button>
         </div>
 
-        <!-- Area Hasil Audio -->
         <div id="result-area" class="mt-6 hidden space-y-4 pt-6 border-t border-gray-700">
             <p id="status-text" class="text-sm text-yellow-400 text-center font-bold">Memutar Part 1...</p>
             <audio id="audio-player" controls class="w-full rounded-lg"></audio>
             
-            <p class="text-xs text-gray-400 text-center mt-2">Karena teks sangat panjang, file dipecah jadi beberapa part untuk di-download:</p>
-            <!-- Area tombol download dinamis -->
+            <p class="text-xs text-gray-400 text-center mt-2">Daftar Link Download:</p>
             <div id="download-list" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2"></div>
         </div>
     </div>
 
     <script>
-        // Fungsi pemotong teks otomatis tanpa merusak kata
         function chunkText(text, maxLength) {
             const words = text.split(' ');
             const chunks = [];
@@ -74,11 +71,11 @@
 
             if (!text) return alert("Isi teksnya dulu bos!");
 
-            // Potong teks otomatis per 150 karakter (batas aman API)
             const chunks = chunkText(text, 150); 
-            const urls = chunks.map(chunk => `https://translate.google.com/translate_tts?ie=UTF-8&tl=${voice}&client=tw-ob&q=${encodeURIComponent(chunk)}`);
+            
+            // PERUBAHAN DISINI: Menggunakan googleapis dengan client=gtx
+            const urls = chunks.map(chunk => `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${voice}&q=${encodeURIComponent(chunk)}`);
 
-            // Persiapan Playlist
             let currentIndex = 0;
             audioPlayer.src = urls[currentIndex];
             statusText.innerText = `Memutar Part 1 dari ${urls.length}`;
@@ -86,7 +83,6 @@
             resultArea.classList.remove('hidden');
             audioPlayer.play();
 
-            // Pindah ke lagu/suara berikutnya otomatis kalau selesai
             audioPlayer.onended = () => {
                 currentIndex++;
                 if (currentIndex < urls.length) {
@@ -99,12 +95,11 @@
                 }
             };
 
-            // Bikin tombol download otomatis sebanyak potongan teks
             downloadList.innerHTML = ''; 
             urls.forEach((url, index) => {
                 const btn = document.createElement('a');
                 btn.href = url;
-                btn.target = "_blank"; // Supaya aman download di HP
+                btn.target = "_blank";
                 btn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 text-sm";
                 btn.innerHTML = `⬇️ Download Part ${index + 1}`;
                 downloadList.appendChild(btn);
