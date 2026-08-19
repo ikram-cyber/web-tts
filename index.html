@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Generator Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700">
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Web TTS (Tanpa Server)</h2>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Teks (Maks ~200 karakter per proses)</label>
+                <textarea id="text" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Masukkan teks di sini..."></textarea>
+            </div>
+
+            <button id="btn-generate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                Generate Suara 🚀
+            </button>
+        </div>
+
+        <div id="result-area" class="mt-6 hidden space-y-4 pt-6 border-t border-gray-700">
+            <audio id="audio-player" controls class="w-full rounded-lg"></audio>
+            <a id="download-link" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                Download MP3
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const btnGenerate = document.getElementById('btn-generate');
+        const resultArea = document.getElementById('result-area');
+        const audioPlayer = document.getElementById('audio-player');
+        const downloadLink = document.getElementById('download-link');
+
+        btnGenerate.addEventListener('click', () => {
+            const text = document.getElementById('text').value.trim();
+            if (!text) return alert("Isi teksnya dulu bos!");
+
+            // Menggunakan API gratis untuk bypass kebutuhan Python/Server
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=id&client=tw-ob&q=${encodeURIComponent(text)}`;
+
+            audioPlayer.src = url;
+            downloadLink.href = url;
+            downloadLink.download = `suara-${Date.now()}.mp3`;
+            
+            resultArea.classList.remove('hidden');
+            audioPlayer.play();
+        });
+    </script>
+</body>
+</html>
